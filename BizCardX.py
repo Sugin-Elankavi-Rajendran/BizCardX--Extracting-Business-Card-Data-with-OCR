@@ -4,7 +4,7 @@ import streamlit as st
 
 st.set_page_config(layout="wide")
 st.header("Business Card Detail Extraction:")
-st.file_uploader(
+uploaded_file = st.file_uploader(
     "Upload the Business Card",
     type= ['png', 'jpg'],
     accept_multiple_files=False, 
