@@ -3,6 +3,7 @@ import easyocr
 import sqlite3
 from PIL import Image
 import io
+import numpy as np
 
 # Create a SQLite database to store extracted information
 conn = sqlite3.connect('business_cards.db')
@@ -30,7 +31,10 @@ conn.commit()
 # Function to extract information from an image using easyOCR
 def extract_info(image):
     reader = easyocr.Reader(['en'])
-    result = reader.readtext(image)
+    # Convert PIL Image to NumPy array
+    image_array = np.array(image)
+    
+    result = reader.readtext(image_array)
     
     info = {
         'company_name': '',
@@ -123,7 +127,68 @@ if st.button("Read Data from Database"):
         st.write(f"Pin Code: {pin_code}")
         st.image(Image.open(io.BytesIO(row[-1])), caption="Business Card Image", use_column_width=True)
 
-# Update and Delete data can be added similarly.
+# Update and Delete data
+if st.button("Update Data"):
+    card_id = st.text_input("Enter Card ID for update:")
+    if card_id:
+        cursor.execute('SELECT * FROM business_cards WHERE id=?', (card_id,))
+        existing_data = cursor.fetchone()
+        if existing_data:
+            st.subheader("Existing Data:")
+            _, company_name, card_holder_name, designation, mobile_number, email_address, website_url, area, city, state, pin_code, _ = existing_data
+            st.write(f"Company Name: {company_name}")
+            st.write(f"Card Holder Name: {card_holder_name}")
+            st.write(f"Designation: {designation}")
+            st.write(f"Mobile Number: {mobile_number}")
+            st.write(f"Email Address: {email_address}")
+            st.write(f"Website URL: {website_url}")
+            st.write(f"Area: {area}")
+            st.write(f"City: {city}")
+            st.write(f"State: {state}")
+            st.write(f"Pin Code: {pin_code}")
+            
+            # Update data
+            updated_info = {}
+            for key in extracted_info.keys():
+                updated_info[key] = st.text_input(f"Update {key}:", value=existing_data[key])
+            
+            if st.button("Save Updated Data"):
+                cursor.execute('''
+                    UPDATE business_cards
+                    SET company_name=?, card_holder_name=?, designation=?, mobile_number=?, email_address=?, website_url=?,
+                    area=?, city=?, state=?, pin_code=?
+                    WHERE id=?
+                ''', (updated_info['company_name'], updated_info['card_holder_name'], updated_info['designation'],
+                      updated_info['mobile_number'], updated_info['email_address'], updated_info['website_url'],
+                      updated_info['area'], updated_info['city'], updated_info['state'], updated_info['pin_code'], card_id))
+                conn.commit()
+                st.success("Information updated in the database.")
+        else:
+            st.warning("Card ID not found in the database.")
+
+if st.button("Delete Data"):
+    card_id = st.text_input("Enter Card ID for delete:")
+    if card_id:
+        cursor.execute('SELECT * FROM business_cards WHERE id=?', (card_id,))
+        existing_data = cursor.fetchone()
+        if existing_data:
+            st.subheader("Existing Data to Delete:")
+            _, company_name, card_holder_name, designation, _, _, _, area, city, state, pin_code, _ = existing_data
+            st.write(f"Card ID: {card_id}")
+            st.write(f"Company Name: {company_name}")
+            st.write(f"Card Holder Name: {card_holder_name}")
+            st.write(f"Designation: {designation}")
+            st.write(f"Area: {area}")
+            st.write(f"City: {city}")
+            st.write(f"State: {state}")
+            st.write(f"Pin Code: {pin_code}")
+            
+            if st.button("Confirm Delete"):
+                cursor.execute('DELETE FROM business_cards WHERE id=?', (card_id,))
+                conn.commit()
+                st.success("Information deleted from the database.")
+        else:
+            st.warning("Card ID not found in the database.")
 
 # Close the database connection
 conn.close()
