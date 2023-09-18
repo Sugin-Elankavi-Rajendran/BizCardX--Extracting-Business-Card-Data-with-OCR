@@ -17,7 +17,6 @@ uploaded_file = st.file_uploader(
     accept_multiple_files=False,
     label_visibility="visible"
 )
-)
 
 ###############
 
