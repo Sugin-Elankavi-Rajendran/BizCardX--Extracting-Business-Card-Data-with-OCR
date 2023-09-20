@@ -5,6 +5,7 @@ import numpy as np
 import mysql.connector
 import cv2
 import tempfile
+import re
 
 
 ###############
@@ -55,6 +56,13 @@ if st.button("Extract Text"):
     st.subheader("Extracted Text")
     st.write(extracted_text)
     st.write(extracted_lines)
+    
+    website_pattern = r'www[\w\-]+\.com'
+    match = re.search(website_pattern, extracted_text)
+
+    if match:
+        website = match.group()
+        st.write("Website:", website)
 
 #######################
 
