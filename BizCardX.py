@@ -63,6 +63,13 @@ if st.button("Extract Text"):
     if match:
         website = match.group()
         st.write("Website:", website)
+    
+    phone_pattern = r'\+\d{3}-\d{3}-\d{4}'
+    phone_numbers = re.findall(phone_pattern, extracted_text)
+    
+    if phone_numbers:
+        for phone_number in phone_numbers:
+            st.write("Phone Number:", phone_number)
 
 #######################
 
