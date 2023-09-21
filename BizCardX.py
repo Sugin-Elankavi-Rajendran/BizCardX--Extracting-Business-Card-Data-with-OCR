@@ -101,6 +101,17 @@ if st.button("Extract Text"):
     if city_name:
         cities = city_name.group(1)
         st.write("City:", cities)
+    
+#    
+    
+    state_pattern = r',\s*(?:\w+\s+)([^,]+)\s+(\d{6})'
+    state_name = re.search(state_pattern, extracted_text)
+    
+    if state_name:
+        state = state_name.group(1).strip()
+        postal_code = state_name.group(2)
+        st.write("State:", state)
+        st.write("Postal Code:", postal_code)
           
 #######################
 
