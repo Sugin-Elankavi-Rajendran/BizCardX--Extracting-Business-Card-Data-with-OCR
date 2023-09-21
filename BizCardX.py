@@ -77,6 +77,13 @@ if st.button("Extract Text"):
     if email:
         email_id = email.group()
         st.write("Email Address:", email_id)
+    
+    address_pattern = r'\d+\s+ABC St'
+    address_name = re.search(address_pattern, extracted_text)
+    
+    if address_name:
+        addresses = address_name.group()
+        st.write("Address:", addresses)
         
 #######################
 
