@@ -58,11 +58,11 @@ if st.button("Extract Text"):
     st.write(extracted_lines)
     
     website_pattern = r'www[\w\-]+\.com'
-    match = re.search(website_pattern, extracted_text)
+    website = re.search(website_pattern, extracted_text)
 
-    if match:
-        website = match.group()
-        st.write("Website:", website)
+    if website:
+        website_name = website.group()
+        st.write("Website:", website_name)
     
     phone_pattern = r'\+\d{3}-\d{3}-\d{4}'
     phone_numbers = re.findall(phone_pattern, extracted_text)
@@ -70,7 +70,14 @@ if st.button("Extract Text"):
     if phone_numbers:
         for phone_number in phone_numbers:
             st.write("Phone Number:", phone_number)
-
+    
+    email_pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
+    email = re.search(email_pattern, extracted_text)
+    
+    if email:
+        email_id = email.group()
+        st.write("Email Address:", email_id)
+        
 #######################
 
 connection = mysql.connector.connect(
