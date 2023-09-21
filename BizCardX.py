@@ -112,6 +112,17 @@ if st.button("Extract Text"):
         postal_code = state_name.group(2)
         st.write("State:", state)
         st.write("Postal Code:", postal_code)
+
+#
+
+    designation_pattern = r'^\w+\s+(\w+)\s+(\w+)'
+    designation_name = re.search(designation_pattern, extracted_text)
+    
+    if designation_name:
+        second_word = designation_name.group(1)
+        third_word = designation_name.group(2)
+        designation = f"{second_word} {third_word}"
+        st.write("Designation:", designation)
           
 #######################
 
@@ -133,6 +144,7 @@ if not table_exists:
     CREATE TABLE company_info (
         id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
+        designation VARCHAR(15),
         phone1 VARCHAR(15),
         phone2 VARCHAR(15),
         website VARCHAR(255),
