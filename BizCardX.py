@@ -58,13 +58,15 @@ if st.button("Extract Text"):
     st.write(extracted_lines)
 
 #
-    
-    website_pattern = r'www[\w\-]+\.com'
-    website = re.search(website_pattern, extracted_text)
 
-    if website:
-        website_name = website.group()
-        st.write("Website:", website_name)
+    designation_pattern = r'^\w+\s+(\w+)\s+(\w+)'
+    designation_name = re.search(designation_pattern, extracted_text)
+    
+    if designation_name:
+        second_word = designation_name.group(1)
+        third_word = designation_name.group(2)
+        designation = f"{second_word} {third_word}"
+        st.write("Designation:", designation)
    
 #
  
@@ -74,7 +76,16 @@ if st.button("Extract Text"):
     if phone_numbers:
         for phone_number in phone_numbers:
             st.write("Phone Number:", phone_number)
+                                            
+#
+    
+    website_pattern = r'www[\w\-]+\.com'
+    website = re.search(website_pattern, extracted_text)
 
+    if website:
+        website_name = website.group()
+        st.write("Website:", website_name)
+        
 #
     
     email_pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
@@ -101,9 +112,9 @@ if st.button("Extract Text"):
     if city_name:
         cities = city_name.group(1)
         st.write("City:", cities)
+
     
 #    
-    
     state_pattern = r',\s*(?:\w+\s+)([^,]+)\s+(\d{6})'
     state_name = re.search(state_pattern, extracted_text)
     
@@ -112,18 +123,7 @@ if st.button("Extract Text"):
         postal_code = state_name.group(2)
         st.write("State:", state)
         st.write("Postal Code:", postal_code)
-
-#
-
-    designation_pattern = r'^\w+\s+(\w+)\s+(\w+)'
-    designation_name = re.search(designation_pattern, extracted_text)
-    
-    if designation_name:
-        second_word = designation_name.group(1)
-        third_word = designation_name.group(2)
-        designation = f"{second_word} {third_word}"
-        st.write("Designation:", designation)
-          
+       
 #######################
 
 connection = mysql.connector.connect(
