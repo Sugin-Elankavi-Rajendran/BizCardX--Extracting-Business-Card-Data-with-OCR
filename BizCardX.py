@@ -58,6 +58,19 @@ if st.button("Extract Text"):
     st.write(extracted_lines)
 
 #
+    pattern = r'(\w+)\s+\w+\s+\d{6}\s+(\w+)\s*$'
+
+    match = re.search(pattern, extracted_text, re.IGNORECASE)
+
+    if match:
+        first_name = match.group(1)
+        second_name = match.group(2)
+        full_name = first_name + " " + second_name
+        st.write("Company Name:", full_name)
+    else:
+        st.write("Names not found in the text.")
+
+#
 
     name_pattern = r'^\w+'
     match = re.search(name_pattern, extracted_text)
