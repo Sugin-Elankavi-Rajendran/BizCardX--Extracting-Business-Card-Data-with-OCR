@@ -59,6 +59,17 @@ if st.button("Extract Text"):
 
 #
 
+    name_pattern = r'^\w+'
+    match = re.search(name_pattern, extracted_text)
+
+    if match:
+        first_name = match.group()
+        st.write("Name:", first_name)
+    else:
+        st.write("No names found in the text.")
+
+#
+
     designation_pattern = r'^\w+\s+(\w+)\s+(\w+)'
     designation_name = re.search(designation_pattern, extracted_text)
     
@@ -112,8 +123,7 @@ if st.button("Extract Text"):
     if city_name:
         cities = city_name.group(1)
         st.write("City:", cities)
-
-    
+  
 #    
     state_pattern = r',\s*(?:\w+\s+)([^,]+)\s+(\d{6})'
     state_name = re.search(state_pattern, extracted_text)
