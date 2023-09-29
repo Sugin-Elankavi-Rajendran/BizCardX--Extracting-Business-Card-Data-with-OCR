@@ -64,7 +64,7 @@ if st.button("Extract Text"):
 
     if match:
         first_name = match.group()
-        st.write("Name:", first_name)
+        st.write("Card Holder Name:", first_name)
     else:
         st.write("No names found in the text.")
 
@@ -153,7 +153,8 @@ if not table_exists:
     create_table_for_company_info = """
     CREATE TABLE company_info (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
+        Company name VARCHAR(255) NOT NULL,
+        Card Holder name VARCHAR(255) NOT NULL,
         designation VARCHAR(15),
         phone1 VARCHAR(15),
         phone2 VARCHAR(15),
