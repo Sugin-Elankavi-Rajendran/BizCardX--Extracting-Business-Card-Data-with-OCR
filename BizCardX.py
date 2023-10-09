@@ -96,11 +96,12 @@ if st.button("Extract Text"):
  
     phone_pattern = r'\+\d{3}-\d{3}-\d{4}'
     phone_numbers = re.findall(phone_pattern, extracted_text)
-    
-    if phone_numbers:
-        for phone_number in phone_numbers:
-            st.write("Phone Number:", phone_number)
-                                            
+
+    if phone_numbers and len(phone_numbers) == 2:
+        p1, p2 = phone_numbers
+        st.write("Phone Number 1:", p1)
+        st.write("Phone Number 2:", p2)
+                                                              
 #
     
     website_pattern = r'www[\w\-]+\.com'
@@ -166,8 +167,8 @@ if not table_exists:
     create_table_for_company_info = """
     CREATE TABLE company_info (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        Company name VARCHAR(255) NOT NULL,
-        Card Holder name VARCHAR(255) NOT NULL,
+        Company_name VARCHAR(255) NOT NULL,
+        Card_Holder_name VARCHAR(255) NOT NULL,
         designation VARCHAR(15),
         phone1 VARCHAR(15),
         phone2 VARCHAR(15),
@@ -187,3 +188,50 @@ connection.close()
 
 #################################
 
+connection = mysql.connector.connect(
+    host = "localhost",
+    user = "root",
+    password = "12345",
+    database = "cards"
+)
+cursor = connection.cursor()
+
+insert_statement = """
+INSERT INTO company_info (
+    Company_name,
+    Card_Holder_name,
+    designation,
+    phone1,
+    phone2,
+    website,
+    email,
+    address,
+    city,
+    state,
+    postal_code,
+    additional_info
+) 
+VALUES (
+    %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+)"""
+
+data_to_insert = (
+    full_name,
+    first_name,
+    designation,
+    p1,
+    p2,
+    website_name,
+    email_id,
+    addresses,
+    cities,
+    state,
+    postal_code,
+    extracted_text
+)
+
+cursor.execute(insert_statement, data_to_insert)
+
+connection.commit()
+
+connection.close()
