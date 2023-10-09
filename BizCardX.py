@@ -47,7 +47,7 @@ if uploaded_file and denoised_image is not None:
 
 extracted_lines = []
 
-if st.button("Extract Text"):
+if st.button("Extract Data and save to DB"):
     np_image = np.array(denoised_image)
     result = reader.readtext(np_image)
     for text in result:
@@ -195,7 +195,7 @@ connection = mysql.connector.connect(
     database = "cards"
 )
 cursor = connection.cursor()
-
+   
 insert_statement = """
 INSERT INTO company_info (
     Company_name,
