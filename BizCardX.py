@@ -3,6 +3,7 @@ import easyocr
 from PIL import Image
 import io
 import tempfile
+import mysql.connector
 
 ##########################
 
@@ -21,3 +22,33 @@ if image:
 
     for result in results:
         st.write(result[1])
+
+################
+
+mydb = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="12345",
+        database="cards"
+    )
+
+mycursor = mydb.cursor()
+
+mycursor.execute("""
+        CREATE TABLE IF NOT EXISTS card_info (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            company_name VARCHAR(255),
+            card_holder_name VARCHAR(255),
+            designation VARCHAR(255),
+            mobile_number INT,
+            email_address VARCHAR(255),
+            website_URL VARCHAR(255),
+            area VARCHAR(255),
+            city VARCHAR(255),
+            state VARCHAR(255),
+            pincode INT
+        )
+    """)
+
+sql = "INSERT INTO card_info (company name, card holder name, designation,mobile number, email addresss, website URL, area, city, state, pincode) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+
