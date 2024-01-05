@@ -37,6 +37,21 @@ if st.button("Extract"):
         st.write("E-Mail:", emails[0])
 
 ##########################################################
+
+        website_pattern = r"(\S+\.com)\b"
+        website = []
+        for result in results:
+            w = result[1]
+            websites = re.findall(website_pattern, w, flags=re.IGNORECASE)
+            website.extend(websites)
+        final_website = []
+        for web in website:
+            if "@" not in web:
+                final_website.append(web)
+        
+        st.write("Website URLs:", final_website[0])
+
+##########################################################
         
 mydb = mysql.connector.connect(
     host="localhost",
