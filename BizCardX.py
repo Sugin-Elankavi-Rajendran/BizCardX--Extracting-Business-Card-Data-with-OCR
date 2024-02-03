@@ -44,6 +44,36 @@ if selected == "Home":
         )
 
 #######################################################
+
+#Starting easyOCR, connecting MySQL and creating Table
+        
+reader = easyocr.Reader(['en'])
+
+mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="12345",
+    database="cards"
+)
+
+mycursor = mydb.cursor(buffered=True)
+
+mycursor.execute('''CREATE TABLE IF NOT EXISTS card_data
+                   (id INTEGER PRIMARY KEY AUTO_INCREMENT,
+                    company_name TEXT,
+                    card_holder TEXT,
+                    designation TEXT,
+                    mobile_number VARCHAR(50),
+                    email TEXT,
+                    website TEXT,
+                    area TEXT,
+                    city TEXT,
+                    state TEXT,
+                    pin_code VARCHAR(10),
+                    image LONGBLOB
+                    )''')
+
+#######################################################
    
 # image = st.file_uploader("Choose a business card image", type=["jpg", "png", "jpeg"])
 
@@ -60,17 +90,6 @@ if selected == "Home":
 #         for result in results:
 #             answer.append(result[1])
 #         st.write(answer)
-
-# #######################################################
-
-# selected = option_menu(None, ["Home","Upload & Extract","Modify"],
-#                        icons=["house","cloud-upload","pencil-square"],
-#                        default_index=0,
-#                        orientation="horizontal",
-#                        styles={"nav-link": {"font-size": "35px", "text-align": "centre", "margin": "-2px", "--hover-color": "#6495ED"},
-#                                "icon": {"font-size": "35px"},
-#                                "container" : {"max-width": "6000px"},
-#                                "nav-link-selected": {"background-color": "#6495ED"}})
 
 # ##########################################################
 
@@ -100,30 +119,4 @@ if selected == "Home":
 
 # ##########################################################
         
-# mydb = mysql.connector.connect(
-#     host="localhost",
-#     user="root",
-#     password="12345",
-#     database="cards"
-# )
-
-# mycursor = mydb.cursor()
-
-# mycursor.execute("""
-#     CREATE TABLE IF NOT EXISTS card_info (
-#         id INT AUTO_INCREMENT PRIMARY KEY,
-#         company_name VARCHAR(255),
-#         card_holder_name VARCHAR(255),
-#         designation VARCHAR(255),
-#         mobile_number INT,
-#         phone_number INT,
-#         email_address VARCHAR(255),
-#         website_URL VARCHAR(255),
-#         area VARCHAR(255),
-#         city VARCHAR(255),
-#         state VARCHAR(255),
-#         pincode INT
-#     )
-# """)
-
 # sql = "INSERT INTO card_info (company_name, card_holder_name, designation, mobile_number, phone_number, email_address, website_URL, area, city, state, pincode) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
