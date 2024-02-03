@@ -2,10 +2,10 @@ import streamlit as st
 from streamlit_option_menu import option_menu
 from PIL import Image
 from system_path import home_image
-import pandas as pd
 import easyocr
-import cv2
 import mysql.connector
+import pandas as pd
+import os
 import numpy as np
 import re
 
@@ -74,8 +74,30 @@ mycursor.execute('''CREATE TABLE IF NOT EXISTS card_data
                     )''')
 
 #######################################################
-   
-# image = st.file_uploader("Choose a business card image", type=["jpg", "png", "jpeg"])
+
+#Upload and Extract Option
+
+if selected == "Upload & Extract":
+    if st.button(":blue[Already stored data]"):
+        mycursor.execute("select company_name,card_holder,designation,mobile_number,email,website,area,city,state,pin_code from card_data")
+        updated_df = pd.DataFrame(mycursor.fetchall(),
+                                  columns=["Company_Name", "Card_Holder", "Designation", "Mobile_Number",
+                                           "Email", "Website", "Area", "City", "State", "Pin_Code"])
+        st.write(updated_df)
+    st.subheader(":blue[Upload a Business Card]")
+
+    uploaded_card = st.file_uploader("Choose a business card image", label_visibility="collapsed", type=["png", "jpeg", "jpg"])
+
+    if uploaded_card is not None:
+
+        def save_card(uploaded_card):
+            uploaded_cards_dir = os.path.join(os.getcwd(), "uploaded_cards")
+            with open(os.path.join(uploaded_cards_dir, uploaded_card.name), "wb") as f:
+                f.write(uploaded_card.getbuffer())
+
+        save_card(uploaded_card)
+
+
 
 # if st.button("Extract"):
 #     if image:
@@ -118,5 +140,4 @@ mycursor.execute('''CREATE TABLE IF NOT EXISTS card_data
 #         st.write("Website URLs:", final_website[0])
 
 # ##########################################################
-        
-# sql = "INSERT INTO card_info (company_name, card_holder_name, designation, mobile_number, phone_number, email_address, website_URL, area, city, state, pincode) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+
