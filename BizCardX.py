@@ -93,9 +93,11 @@ if selected == "Upload & Extract":
 
         def save_card(uploaded_card):
             uploaded_cards_dir = "uploaded_cards"
+            os.makedirs(uploaded_cards_dir, exist_ok=True)
             file_path = os.path.join(uploaded_cards_dir, uploaded_card.name)
             with open(file_path, "wb") as f:
-                f.write(uploaded_card.getbuffer())
+                f.write(uploaded_card.getbuffer())        
+            return file_path
 
         save_card(uploaded_card)
 
@@ -124,7 +126,7 @@ if selected == "Upload & Extract":
                 saved_img = os.path.join(os.getcwd(), "uploaded_cards", uploaded_card.name)
                 image = cv2.imread(saved_img)
                 res = reader.readtext(saved_img)
-                st.markdown("### Image Processed and Data Extracted")
+                st.markdown("### Processed Image")
                 st.pyplot(image_preview(image, res))
 
         saved_img = os.path.join(os.getcwd(), "uploaded_cards", uploaded_card.name)
