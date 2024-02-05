@@ -243,5 +243,97 @@ if selected == "Upload & Extract":
 
 # Modify Option
             
+if selected == "Modify":
+    st.subheader(':blue[You can view , alter or delete the extracted data from the database]')
+    select = option_menu(None,
+                         options=["ALTER", "DELETE"],
+                         default_index=0,
+                         orientation="horizontal",
+                         styles={"container": {"width": "100%"},
+                                 "nav-link": {"font-size": "20px", "text-align": "center", "margin": "-2px"},
+                                 "nav-link-selected": {"background-color": "#6495ED"}})
+    
+    if select == "ALTER":
+        st.markdown(":blue[Alter the data here]")
 
+        try:
+            mycursor.execute("SELECT card_holder FROM card_data")
+            result = mycursor.fetchall()
+            business_cards = {}
+            for row in result:
+                business_cards[row[0]] = row[0]
+            options = ["None"] + list(business_cards.keys())
+            selected_card = st.selectbox("**Select a card**", options)
+            if selected_card == "None":
+                st.write("No card selected.")
+            else:
+                st.markdown("#### Update or modify any data below")
+                mycursor.execute(
+                "select company_name,card_holder,designation,mobile_number,email,website,area,city,state,pin_code from card_data WHERE card_holder=%s",
+                (selected_card,))
+                result = mycursor.fetchone()
 
+                company_name = st.text_input("Company_Name", result[0])
+                card_holder = st.text_input("Card_Holder", result[1])
+                designation = st.text_input("Designation", result[2])
+                mobile_number = st.text_input("Mobile_Number", result[3])
+                email = st.text_input("Email", result[4])
+                website = st.text_input("Website", result[5])
+                area = st.text_input("Area", result[6])
+                city = st.text_input("City", result[7])
+                state = st.text_input("State", result[8])
+                pin_code = st.text_input("Pin_Code", result[9])
+
+                if st.button(":blue[Commit changes to DB]"):
+                    mycursor.execute("""UPDATE card_data SET company_name=%s,card_holder=%s,designation=%s,mobile_number=%s,email=%s,website=%s,area=%s,city=%s,state=%s,pin_code=%s
+                                    WHERE card_holder=%s""", (company_name, card_holder, designation, mobile_number, email, website, area, city, state, pin_code,
+                    selected_card))
+                    mydb.commit()
+                    st.success("Information updated in database successfully.")
+
+            if st.button(":blue[View updated data]"):
+                mycursor.execute("select company_name,card_holder,designation,mobile_number,email,website,area,city,state,pin_code from card_data")
+                updated_df = pd.DataFrame(mycursor.fetchall(),
+                                          columns=["Company_Name", "Card_Holder", "Designation", "Mobile_Number",
+                                                   "Email",
+                                                   "Website", "Area", "City", "State", "Pin_Code"])
+                st.write(updated_df)
+        
+        except:
+            st.warning("There is no data available in the database")
+    
+    if select == "DELETE":
+        st.subheader(":blue[Delete the data]")
+        try:
+            mycursor.execute("SELECT card_holder FROM card_data")
+            result = mycursor.fetchall()
+            business_cards = {}
+            for row in result:
+                business_cards[row[0]] = row[0]
+            options = ["None"] + list(business_cards.keys())
+            selected_card = st.selectbox("**Select a card**", options)
+            if selected_card == "None":
+                st.write("No card selected.")
+            else:
+                st.write(f"### You have selected :green[**{selected_card}'s**] card to delete")
+                st.write("#### Proceed to delete this card?")
+                if st.button("Yes Delete Business Card"):
+                    mycursor.execute(f"DELETE FROM card_data WHERE card_holder='{selected_card}'")
+                    mydb.commit()
+                    st.success("Business card information deleted from database.")
+
+            if st.button(":blue[View updated data]"):
+                mycursor.execute(
+                    "select company_name,card_holder,designation,mobile_number,email,website,area,city,state,pin_code from card_data")
+                updated_df = pd.DataFrame(mycursor.fetchall(),
+                                          columns=["Company_Name", "Card_Holder", "Designation", "Mobile_Number",
+                                                   "Email",
+                                                   "Website", "Area", "City", "State", "Pin_Code"])
+                st.write(updated_df)
+
+        except:
+            st.warning("There is no data available in the database")
+
+#######################################################
+            
+# THE END
