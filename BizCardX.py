@@ -12,36 +12,58 @@ import re
 
 #######################################################
 
-#option menu
-
+# Set the page configuration to wide layout
 st.set_page_config(layout="wide")
-st.markdown("<h1 style='text-align: center;'>BizCardX Data Extraction</h1>", unsafe_allow_html=True)
 
+# Custom CSS for styling
+st.markdown("""
+    <style>
+        body {
+            background-color: #f5f5f5;
+        }
+        .streamlit-container {
+            max-width: 95%;
+        }
+        .sidebar .sidebar-content {
+            background-color: #263238;
+            color: #ffffff;
+        }
+        .streamlit-button {
+            background-color: #2196F3;
+            color: #ffffff;
+        }
+        .streamlit-button:hover {
+            background-color: #1565C0;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+# Header
+st.markdown("<h1 style='text-align: center; color: #2196F3;'>BizCardX Data Extraction</h1>", unsafe_allow_html=True)
+
+# Sidebar with options
 with st.sidebar:
-    selected = option_menu("Main Menu", ["Home","Upload & Extract","Modify"], 
-        icons=["house","cloud-upload","pencil-square"], menu_icon="cast", default_index=1)
+    selected = option_menu("Main Menu", ["Home", "Upload & Extract", "Modify"], 
+                          icons=["house", "cloud-upload", "pencil-square"], menu_icon="cast", default_index=1)
     selected
 
 #######################################################
 
-#Home Option
-
+# Home Option
 if selected == "Home":
-    col1 , col2 = st.columns(2)
+    col1, col2 = st.columns(2)
     with col1:
-        st.image(Image.open(home_image))
+        st.image(Image.open(home_image), use_column_width=True)
     with col2:
-        st.write("")
         st.markdown(
-        """
-        To extract card details, click the "Upload & Extract" option.
-        """
+            """
+            To extract card details, click the "Upload & Extract" option.
+            """
         )   
-        st.write("")
         st.markdown(
-        """
-        To modify the details in the database, click the "Modify" option.
-        """
+            """
+            To modify the details in the database, click the "Modify" option.
+            """
         )
 
 #######################################################
